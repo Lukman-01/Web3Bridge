@@ -1,13 +1,76 @@
-# Sample Hardhat Project
+# AreaOfShapes
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+This Solidity program implements the `AreaOfShapes` smart contract, providing basic functionality to calculate the area of different geometric shapes, including squares, rectangles, and triangles. The contract is designed for educational purposes and demonstrates fundamental Solidity programming concepts.
 
-Try running some of the following tasks:
+## Description
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
-```
+The `AreaOfShapes` contract is built on the Ethereum blockchain using Solidity. It includes the following functionalities:
+- **Square Area Calculation**: Calculates the area of a square given the length of its side.
+- **Rectangle Area Calculation**: Calculates the area of a rectangle given its length and breadth.
+- **Triangle Area Calculation**: Calculates the area of a triangle given its base and height.
+
+This project includes a Hardhat setup for deploying and testing the smart contract on the Ethereum Sepolia test network.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- npm (Node Package Manager)
+- Hardhat
+- An Ethereum wallet with Sepolia testnet funds
+- `.env` file with your Alchemy HTTP URL and private key
+
+### Setting Up the Project
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/Lukman-01/Web3Bridge.git
+   cd Week3/AreaContract
+   ```
+
+2. **Install Dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Create a `.env` File**
+
+   Create a `.env` file in the root directory with the following content:
+
+   ```bash
+   ALCHEMY_HTTP_URL=your_alchemy_http_url
+   PRIVATE_KEY=your_private_key
+   ```
+
+### Executing the Program
+
+1. **Compile the Contract**
+
+   ```bash
+   npx hardhat compile
+   ```
+
+2. **Deploy the Contract**
+
+   You can deploy the contract to the Ethereum Sepolia testnet by running the following Hardhat task:
+
+   ```bash
+   npx hardhat ignition deploy ./ignition/modules/deploy.ts --network sepolia
+   ```
+
+### Deployment Details
+
+- Wallet address for deployment: 0x40feacdeee6f017fA2Bc1a8FB38b393Cf9022d71
+
+- AreaOfShapes contract deployed to: 0x75E73331Fc12c6977E47cB3Ab4fD45b05BAe0109
+
+- Successfully verified contract link: [Etherscan Link](https://sepolia.etherscan.io/address/0x75E73331Fc12c6977E47cB3Ab4fD45b05BAe0109)
+
+### Authors
+
+Abdulyekeen Lukman
+
+ 
