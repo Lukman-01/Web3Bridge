@@ -1,13 +1,11 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-const LockModule = buildModule("LockModule", (m) => {
+const AreaOfShapes = buildModule("AreaOfShapes", (m) => {
    
 
-  const area = m.contract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+  const area = m.contract("AreaOfShapes");
 
-  return { lock };
+  return { area};
 });
 
-export default LockModule;
+export default AreaOfShapes;
