@@ -65,9 +65,9 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 
 - Wallet address for deployment: 0x40feacdeee6f017fA2Bc1a8FB38b393Cf9022d71
 
-- AreaOfShapes contract deployed to: 0x75E73331Fc12c6977E47cB3Ab4fD45b05BAe0109
+- AreaOfShapes contract deployed to: 0x1c1ef451db29aa93B3D5DFEd2A3037C5B825Ef86
 
-- Successfully verified contract link: [Etherscan Link](https://sepolia.etherscan.io/address/0x75E73331Fc12c6977E47cB3Ab4fD45b05BAe0109)
+- Successfully verified contract link: [Etherscan Link](https://sepolia.etherscan.io/address/0x1c1ef451db29aa93B3D5DFEd2A3037C5B825Ef86)
 
 ### Authors
 

@@ -5,7 +5,7 @@ const ALCHEMY_HTTP_URL =  vars.get("ALCHEMY_HTTP_URL");
 const PRIVATE_KEY =  vars.get("PRIVATE_KEY");
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.24",
+  solidity: "0.8.0",
   networks: {
     sepolia: {
       url: ALCHEMY_HTTP_URL,
