@@ -29,7 +29,7 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 
    ```bash
    git clone https://github.com/Lukman-01/Web3Bridge.git
-   cd CrowdFunding
+   cd Week3/CrowdFunding
    ```
 
 2. **Install Dependencies**
@@ -67,9 +67,9 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 
 - Wallet address for deployment: 0x40feacdeee6f017fA2Bc1a8FB38b393Cf9022d71
 
-- CrowdFunding contract deployed to: 
+- CrowdFunding contract deployed to: 0x631f743d1066BD2DB5Eb75BC3ca96c576a20eEE1
 
-- Successfully verified contract link:  [Etherscan Link](https://sepolia.etherscan.io/address/)
+- Successfully verified contract link:  [Etherscan Link](https://sepolia.etherscan.io/address/0x631f743d1066BD2DB5Eb75BC3ca96c576a20eEE1#code)
 
 ### Gas Optimizations
 
