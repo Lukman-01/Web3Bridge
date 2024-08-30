@@ -1,212 +1,9 @@
-// // SPDX-License-Identifier: MIT
-// pragma solidity 0.8.26;
-
-// import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
-// contract SaveERC20 {
-//     address owner;
-//     address tokenAddress;
-//     mapping(address => uint256) balances;
-
-//     // Custom errors for gas optimization
-//     error NotOwner();
-//     error ZeroAddressDetected();
-//     error InsufficientAmount();
-//     error CannotDepositZero();
-//     error CannotSendTo();
-
-//     event DepositSuccessful(address indexed user, uint256 indexed amount);
-//     event WithdrawalSuccessful(address indexed user, uint256 indexed amount);
-//     event TransferSuccessful(address indexed from, address indexed _to, uint256 indexed amount);
-
-//     constructor(address _tokenAddress) {
-//         owner = msg.sender;
-//         tokenAddress = _tokenAddress;
-//     }
-
-//     /**
-//      * @dev Checks if the caller is the owner.
-//      * Replaces the `onlyOwner` modifier.
-//      */
-//     function _checkOwner() private view {
-//         if (msg.sender != owner) {
-//             revert NotOwner();
-//         }
-//     }
-
-//     /**
-//      * @dev Allows a user to deposit tokens into the contract.
-//      * @param _amount The amount of tokens to deposit.
-//      */
-//     function deposit(uint256 _amount) external {
-//         if (msg.sender == address(0)) {
-//             revert ZeroAddressDetected();
-//         }
-
-//         if (_amount == 0) {
-//             revert CannotDepositZero();
-//         }
-
-//         uint256 _userTokenBalance = IERC20(tokenAddress).balanceOf(msg.sender);
-
-//         if (_userTokenBalance < _amount) {
-//             revert InsufficientAmount();
-//         }
-
-//         IERC20(tokenAddress).transferFrom(msg.sender, address(this), _amount);
-
-//         balances[msg.sender] += _amount;
-
-//         emit DepositSuccessful(msg.sender, _amount);
-//     }
-
-//     /**
-//      * @dev Allows a user to withdraw tokens from the contract.
-//      * @param _amount The amount of tokens to withdraw.
-//      */
-//     function withdraw(uint256 _amount) external {
-//         if (msg.sender == address(0)) {
-//             revert ZeroAddressDetected();
-//         }
-
-//         if (_amount == 0) {
-//             revert CannotDepositZero();
-//         }
-
-//         uint256 _userBalance = balances[msg.sender];
-
-//         if (_amount > _userBalance) {
-//             revert InsufficientAmount();
-//         }
-
-//         balances[msg.sender] -= _amount;
-
-//         IERC20(tokenAddress).transfer(msg.sender, _amount);
-
-//         emit WithdrawalSuccessful(msg.sender, _amount);
-//     }
-
-//     /**
-//      * @dev Retrieves the balance of the caller.
-//      * @return The balance of the caller.
-//      */
-//     function myBalance() external view returns(uint256) {
-//         return balances[msg.sender];
-//     }
-
-//     /**
-//      * @dev Retrieves the balance of a specified user.
-//      * @param _user The address of the user to retrieve the balance for.
-//      * @return The balance of the specified user.
-//      */
-//     function getAnyBalance(address _user) external view returns(uint256) {
-//         _checkOwner(); // Private function call replaces onlyOwner modifier
-//         return balances[_user];
-//     }
-
-//     /**
-//      * @dev Retrieves the token balance held by the contract.
-//      * @return The token balance of the contract.
-//      */
-//     function getContractBalance() external view returns(uint256) {
-//         _checkOwner(); // Private function call replaces onlyOwner modifier
-//         return IERC20(tokenAddress).balanceOf(address(this));
-//     }
-
-//     /**
-//      * @dev Transfers tokens from the caller to another address.
-//      * @param _to The address to transfer tokens to.
-//      * @param _amount The amount of tokens to transfer.
-//      */
-//     function transferFunds(address _to, uint256 _amount) external {
-//         if (msg.sender == address(0)) {
-//             revert ZeroAddressDetected();
-//         }
-
-//         if (_to == address(0)) {
-//             revert CannotSendTo();
-//         }
-        
-//         if (balances[msg.sender] < _amount) {
-//             revert InsufficientAmount();
-//         }
-
-//         balances[msg.sender] -= _amount;
-
-//         IERC20(tokenAddress).transfer(_to, _amount);
-
-//         emit TransferSuccessful(msg.sender, _to, _amount);
-//     }
-
-//     /**
-//      * @dev Deposits tokens from the caller's balance to another user's balance within the contract.
-//      * @param _user The address of the user to deposit tokens for.
-//      * @param _amount The amount of tokens to deposit.
-//      */
-//     function depositForAnotherUserFromWithin(address _user, uint256 _amount) external {
-//         if (msg.sender == address(0)) {
-//             revert ZeroAddressDetected();
-//         }
-
-//         if (_user == address(0)) {
-//             revert CannotSendTo();
-//         }
-
-//         if (balances[msg.sender] < _amount) {
-//             revert InsufficientAmount();
-//         }
-
-//         balances[msg.sender] -= _amount;
-//         balances[_user] += _amount;
-//     }
-
-//     /**
-//      * @dev Deposits tokens from the caller's external wallet to another user's balance within the contract.
-//      * @param _user The address of the user to deposit tokens for.
-//      * @param _amount The amount of tokens to deposit.
-//      */
-//     function depositForAnotherUser(address _user, uint256 _amount) external {
-//         if (msg.sender == address(0)) {
-//             revert ZeroAddressDetected();
-//         }
-
-//         if (_user == address(0)) {
-//             revert CannotSendTo();
-//         }
-
-//         uint256 _userTokenBalance = IERC20(tokenAddress).balanceOf(msg.sender);
-
-//         if (_userTokenBalance < _amount) {
-//             revert InsufficientAmount();
-//         }
-
-//         IERC20(tokenAddress).transferFrom(msg.sender, address(this), _amount);
-
-//         balances[_user] += _amount;
-//     }
-
-//     /**
-//      * @dev Allows the owner to withdraw tokens from the contract's balance.
-//      * @param _amount The amount of tokens to withdraw.
-//      */
-//     function ownerWithdraw(uint256 _amount) external {
-//         _checkOwner(); // Private function call replaces onlyOwner modifier
-
-//         if (IERC20(tokenAddress).balanceOf(address(this)) < _amount) {
-//             revert InsufficientAmount();
-//         }
-
-//         IERC20(tokenAddress).transfer(owner, _amount);
-//     }
-// }
-
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-
-
 contract SaveERC20 {
+    // Custom errors for better gas efficiency
     error AddressZeroDetected();
     error ZeroValueNotAllowed();
     error CantSendToZeroAddress();
@@ -214,21 +11,29 @@ contract SaveERC20 {
     error NotOwner();
     error InsufficientContractBalance();
 
+    // State variables
+    address public owner; // The owner of the contract
+    address public tokenAddress; // The ERC20 token address that this contract interacts with
+    mapping(address => uint256) balances; // Mapping to track the balance of each user
 
-    address public owner;
-    address public tokenAddress;
-    mapping(address => uint256) balances;
-
+    // Events to log successful operations
     event DepositSuccessful(address indexed user, uint256 indexed amount);
     event WithdrawalSuccessful(address indexed user, uint256 indexed amount);
     event TransferSuccessful(address indexed from, address indexed _to, uint256 indexed amount);
 
+    /**
+     * @dev Constructor to initialize the contract with the ERC20 token address and set the owner.
+     * @param _tokenAddress The address of the ERC20 token.
+     */
     constructor(address _tokenAddress) {
         owner = msg.sender;
         tokenAddress = _tokenAddress;
     }
 
-
+    /**
+     * @dev Allows users to deposit a specified amount of tokens into the contract.
+     * @param _amount The amount of tokens to deposit.
+     */
     function deposit(uint256 _amount) external {
         if(msg.sender == address(0)) {
             revert AddressZeroDetected();
@@ -251,6 +56,10 @@ contract SaveERC20 {
         emit DepositSuccessful(msg.sender, _amount);
     }
 
+    /**
+     * @dev Allows users to withdraw a specified amount of tokens from their balance in the contract.
+     * @param _amount The amount of tokens to withdraw.
+     */
     function withdraw(uint256 _amount) external {
         if(msg.sender == address(0)) {
             revert AddressZeroDetected();
@@ -273,20 +82,38 @@ contract SaveERC20 {
         emit WithdrawalSuccessful(msg.sender, _amount);
     }
 
+    /**
+     * @dev Returns the balance of the caller in the contract.
+     * @return The balance of the caller.
+     */
     function myBalance() external view returns(uint256) {
         return balances[msg.sender];
     }
 
+    /**
+     * @dev Allows the owner to view the balance of any user.
+     * @param _user The address of the user.
+     * @return The balance of the specified user.
+     */
     function getAnyBalance(address _user) external view returns(uint256) {
         onlyOwner();
         return balances[_user];
     }
 
+    /**
+     * @dev Allows the owner to view the total balance of tokens held by the contract.
+     * @return The total balance of tokens in the contract.
+     */
     function getContractBalance() external view returns(uint256) {
         onlyOwner();
         return IERC20(tokenAddress).balanceOf(address(this));
     }
 
+    /**
+     * @dev Allows users to transfer a specified amount of tokens to another address within the contract.
+     * @param _to The address to transfer tokens to.
+     * @param _amount The amount of tokens to transfer.
+     */
     function transferFunds(address _to, uint256 _amount) external {
         if(msg.sender == address(0)) {
             revert AddressZeroDetected();
@@ -306,6 +133,12 @@ contract SaveERC20 {
         emit TransferSuccessful(msg.sender, _to, _amount);
     }
 
+    /**
+     * @dev Allows a user to transfer tokens from their balance to another user's balance within the contract.
+     * This does not involve an external ERC20 transfer, just an internal balance update.
+     * @param _user The address of the recipient.
+     * @param _amount The amount of tokens to transfer.
+     */
     function depositForAnotherUserFromWithin(address _user, uint256 _amount) external {
         if(msg.sender == address(0)) {
             revert AddressZeroDetected();
@@ -323,6 +156,12 @@ contract SaveERC20 {
         balances[_user] += _amount;
     }
 
+    /**
+     * @dev Allows a user to deposit tokens into the contract on behalf of another user.
+     * This involves transferring tokens from the sender's external ERC20 balance to the contract.
+     * @param _user The address of the recipient.
+     * @param _amount The amount of tokens to deposit.
+     */
     function depositForAnotherUser(address _user, uint256 _amount) external {
         if(msg.sender == address(0)) {
             revert AddressZeroDetected();
@@ -331,7 +170,6 @@ contract SaveERC20 {
         if(_user == address(0)) {
             revert CantSendToZeroAddress();
         }
-
 
         uint256 _userTokenBalance = IERC20(tokenAddress).balanceOf(msg.sender);
 
@@ -344,6 +182,10 @@ contract SaveERC20 {
         balances[_user] += _amount;
     }
 
+    /**
+     * @dev Allows the owner to withdraw tokens from the contract's balance.
+     * @param _amount The amount of tokens to withdraw.
+     */
     function ownerWithdraw(uint256 _amount) external {
         onlyOwner();
 
@@ -354,6 +196,10 @@ contract SaveERC20 {
         IERC20(tokenAddress).transfer(owner, _amount);
     }
 
+    /**
+     * @dev Internal function to restrict access to the owner.
+     * Reverts if the caller is not the owner.
+     */
     function onlyOwner() private view {
         if(msg.sender != owner) {
             revert NotOwner();
