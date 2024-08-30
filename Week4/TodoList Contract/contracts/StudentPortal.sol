@@ -14,17 +14,17 @@ contract StudentPortal {
         string state;
     }
 
-    // mapping is use in place of array in other to avoid array lenth check
+    // mapping is used in place of array to avoid array length check
     mapping(uint => Student) private students;
 
-    // Custom Errors used in place of "required" statement for gas optimization
+    // Custom Errors used in place of "require" statement for gas optimization
     error NotOwner();
     error NameRequired();
     error EmailRequired();
     error DOBRequired();
     error StudentNotFound();
 
-    // events used in the smart contract
+    // Events used in the smart contract
     event StudentCreated(uint indexed studentId, string indexed name, string email, string country);
     event StudentUpdated(uint indexed studentId, string indexed name, string email, string country);
     event StudentDeleted(uint studentId);
@@ -40,6 +40,16 @@ contract StudentPortal {
         owner = msg.sender;
     }
 
+    /**
+     * @dev Registers a new student.
+     * @param _dateOfBirth Date of birth of the student in uint16 format (e.g., 20010101 for January 1, 2001).
+     * @param _name Name of the student.
+     * @param _email Email of the student.
+     * @param _lga Local Government Area (LGA) of the student.
+     * @param _state State of the student.
+     * @param _country Country of the student.
+     * @return The student ID of the newly registered student.
+     */
     function registerStudent(
         uint16 _dateOfBirth,
         string memory _name,
@@ -70,6 +80,16 @@ contract StudentPortal {
         return studentCount++;
     }
 
+    /**
+     * @dev Updates an existing student's details.
+     * @param _studentId The ID of the student to update.
+     * @param _dateOfBirth New date of birth of the student in uint16 format.
+     * @param _name New name of the student.
+     * @param _email New email of the student.
+     * @param _lga New Local Government Area (LGA) of the student.
+     * @param _state New state of the student.
+     * @param _country New country of the student.
+     */
     function updateStudent(
         uint _studentId,
         uint16 _dateOfBirth,
@@ -103,6 +123,10 @@ contract StudentPortal {
         emit StudentUpdated(_studentId, _name, _email, _country);
     }
 
+    /**
+     * @dev Deletes a student record.
+     * @param _studentId The ID of the student to delete.
+     */
     function deleteStudent(uint _studentId) public onlyOwner {
         if (_studentId >= studentCount) {
             revert StudentNotFound();
@@ -112,6 +136,16 @@ contract StudentPortal {
         emit StudentDeleted(_studentId);
     }
 
+    /**
+     * @dev Retrieves a student's details.
+     * @param _studentId The ID of the student to retrieve.
+     * @return name The name of the student.
+     * @return email The email of the student.
+     * @return dateOfBirth The date of birth of the student in uint16 format.
+     * @return lga The Local Government Area (LGA) of the student.
+     * @return country The country of the student.
+     * @return state The state of the student.
+     */
     function getStudent(uint _studentId)
         public
         view

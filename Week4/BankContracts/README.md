@@ -1,13 +1,5 @@
-# Sample Hardhat Project
+npx hardhat ignition deploy ./ignition/modules/SaveERC20.ts --network lisk-sepolia
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+npx hardhat run scripts/interaction.ts --network lisk-sepolia
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
-```
+npx hardhat verify --network lisk-sepolia <deployed address>
