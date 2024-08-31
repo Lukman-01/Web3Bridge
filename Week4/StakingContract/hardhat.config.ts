@@ -1,4 +1,3 @@
-RPC_URL = https://rpc.sepolia-api.lisk.com/
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
