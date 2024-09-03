@@ -6,14 +6,19 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract MerkleAirdrop {
     // state variables
-    bytes32 public merkleRootHash;
-    address public owner;
-    address public tokenAddress;
+    bytes32 public merkleRootHash; // The Merkle root hash used for verifying eligibility
+    address public owner; // The address of the contract owner
+    address public tokenAddress; // The address of the ERC20 token to be distributed
 
     // mappings -- to track users that have claimed tokens
-    mapping(address => bool) usersClaimed;
+    mapping(address => bool) usersClaimed; // Tracks whether a user has claimed their tokens
 
     // constructor
+    /**
+     * @dev Initializes the contract with the token address and Merkle root hash.
+     * @param _tokenAddress The address of the ERC20 token contract.
+     * @param _merkleRootHash The Merkle root hash for verifying eligible users.
+     */
     constructor(address _tokenAddress, bytes32 _merkleRootHash) {
         owner = msg.sender;
         tokenAddress = _tokenAddress;
@@ -21,103 +26,122 @@ contract MerkleAirdrop {
     }
 
     // errors
-    error ZeroAddressNotAllowed();
-    error ZeroAmountNotAllowed();
-    error UserAlreadyClaimed();
-    error ClaimingFailed();
-    error SorryYouAreNotEligible();
-    error YouAreNotTheOwner();
-    error InsufficientTokenAmountFromSender();
-    error InsufficientFundsPleaseTryAgain();
-    error NoTokensRemainingToWithdraw();
-    error WithdrawalFailed();
+    error ZeroAddressNotAllowed(); // Reverts when the address provided is zero
+    error ZeroAmountNotAllowed(); // Reverts when the amount provided is zero
+    error UserAlreadyClaimed(); // Reverts when the user has already claimed their tokens
+    error ClaimingFailed(); // Reverts when the token transfer fails during a claim
+    error SorryYouAreNotEligible(); // Reverts when the user is not eligible for the claim
+    error YouAreNotTheOwner(); // Reverts when the caller is not the owner of the contract
+    error InsufficientTokenAmountFromSender(); // Reverts when the sender does not have enough tokens to deposit
+    error InsufficientFundsPleaseTryAgain(); // Reverts when the contract does not have enough tokens to fulfill the claim
+    error NoTokensRemainingToWithdraw(); // Reverts when there are no tokens left in the contract to withdraw
+    error WithdrawalFailed(); // Reverts when the token transfer fails during withdrawal
 
     // events
-    event UserClaimedTokens();
-    event DepositIntoContractSuccessful(address indexed sender, uint256 amount);
+    event UserClaimedTokens(); // Emitted when a user successfully claims tokens
+    event DepositIntoContractSuccessful(address indexed sender, uint256 amount); // Emitted when tokens are successfully deposited into the contract
 
+    /**
+     * @dev Allows the owner to deposit tokens into the contract for distribution.
+     * @param _amount The amount of tokens to deposit.
+     */
     function depositIntoContract(uint256 _amount) external {
-        // checks
-        _onlyOwner();
-        if (_amount <= 0) revert ZeroAmountNotAllowed();
+        _onlyOwner(); // Ensures only the owner can call this function
+        if (_amount <= 0) revert ZeroAmountNotAllowed(); // Ensures the deposit amount is greater than zero
 
-        // get token balance of msg.sender -- to check if msg.sender has enogh tokens to deposit into contract
+        // Get the token balance of the sender
         uint256 _userTokenBalance = IERC20(tokenAddress).balanceOf(msg.sender);
 
-        // revert if msg.sender doesn't have enought tokens to send
+        // Revert if the sender does not have enough tokens to deposit
         if (_userTokenBalance < _amount)
             revert InsufficientTokenAmountFromSender();
 
-        // deposit tokens into cotract from msg.sender
+        // Transfer tokens from the sender to the contract
         IERC20(tokenAddress).transferFrom(msg.sender, address(this), _amount);
 
-        // emit deposit successfull event
+        // Emit deposit successful event
         emit DepositIntoContractSuccessful(msg.sender, _amount);
     }
 
+    /**
+     * @dev Allows the owner to update the Merkle root hash.
+     * @param _new_merkle_root The new Merkle root hash.
+     */
     function UpdateMerkleRoot(bytes32 _new_merkle_root) external {
-        // checks
-        _onlyOwner();
+        _onlyOwner(); // Ensures only the owner can call this function
 
-        // updates merkleRootHash
+        // Update the Merkle root hash
         merkleRootHash = _new_merkle_root;
     }
 
+    /**
+     * @dev Allows the owner to withdraw any remaining tokens in the contract.
+     */
     function WithdrawRemainingTokens() external {
-        // checks only owner
-        _onlyOwner();
+        _onlyOwner(); // Ensures only the owner can call this function
 
-        // check contract balance if less than zero revert
+        // Get the current balance of tokens in the contract
         uint256 _contractBalance = IERC20(tokenAddress).balanceOf(
             address(this)
         );
-        if (_contractBalance <= 0) revert NoTokensRemainingToWithdraw();
+        if (_contractBalance <= 0) revert NoTokensRemainingToWithdraw(); // Revert if no tokens are available
 
-        // withdraw remaining tokens to onwwers account
+        // Transfer remaining tokens to the owner's account
         if (!IERC20(tokenAddress).transfer(owner, _contractBalance))
-            revert WithdrawalFailed();
+            revert WithdrawalFailed(); // Revert if the transfer fails
     }
 
+    /**
+     * @dev Allows eligible users to claim their reward tokens.
+     * @param _amount The amount of tokens to claim.
+     * @param _merkleProof The Merkle proof to verify eligibility.
+     */
     function claimReward(
         uint256 _amount,
         bytes32[] calldata _merkleProof
     ) external {
-        // sanity check
-        if (msg.sender == address(0)) revert ZeroAddressNotAllowed();
+        if (msg.sender == address(0)) revert ZeroAddressNotAllowed(); // Revert if the sender's address is zero
 
-        // recreate leaf node from user address and amount
+        // Recreate the leaf node from the user's address and amount
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender, _amount));
 
-        // verify that user us eligible using merkle proof
+        // Verify the user's eligibility using the Merkle proof
         if (!MerkleProof.verify(_merkleProof, merkleRootHash, leaf))
             revert SorryYouAreNotEligible();
 
-        // check if user has claimed before
+        // Revert if the user has already claimed their tokens
         if (usersClaimed[msg.sender]) revert UserAlreadyClaimed();
 
-        // save claimed user
+        // Mark the user as having claimed their tokens
         usersClaimed[msg.sender] = true;
 
-        // withdraw eligible amount to eligible user
+        // Withdraw the eligible amount to the user
         _withdraw(msg.sender, _amount);
 
-        // emit events user claimed reward
+        // Emit event to indicate successful claim
         emit UserClaimedTokens();
     }
 
+    /**
+     * @dev Internal function to withdraw tokens to a specified address.
+     * @param _to The address to send tokens to.
+     * @param _amount The amount of tokens to send.
+     */
     function _withdraw(address _to, uint256 _amount) internal {
-        // check if enough tokens is in contract else revert indufficient funds
+        // Revert if the contract does not have enough tokens to fulfill the request
         if (IERC20(tokenAddress).balanceOf(address(this)) < _amount)
             revert InsufficientFundsPleaseTryAgain();
 
-        // check it transfer funtion goes through else revert claim failed
+        // Revert if the token transfer fails
         if (!IERC20(tokenAddress).transfer(_to, _amount))
             revert ClaimingFailed();
     }
 
+    /**
+     * @dev Internal function to check if the caller is the owner.
+     */
     function _onlyOwner() private view {
-        // checks
-        if (msg.sender == address(0)) revert ZeroAddressNotAllowed();
-        if (msg.sender != owner) revert YouAreNotTheOwner();
+        if (msg.sender == address(0)) revert ZeroAddressNotAllowed(); // Revert if the sender's address is zero
+        if (msg.sender != owner) revert YouAreNotTheOwner(); // Revert if the sender is not the owner
     }
 }
