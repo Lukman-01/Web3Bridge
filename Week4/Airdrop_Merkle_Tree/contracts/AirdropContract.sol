@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity 0.8.26;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-contract MerkleAirdrop {
+contract AirdropContract {
     // state variables
     bytes32 public merkleRootHash; // The Merkle root hash used for verifying eligibility
     address public owner; // The address of the contract owner
