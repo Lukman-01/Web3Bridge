@@ -33,7 +33,7 @@ describe("Multisig", function () {
   describe("Deployment", function () {
     it("Should set the right quorum number", async function () {
       // const [owner] = await hre.ethers.getSigners();
-      const { multisig, owner } = await loadFixture(deployMultisigContract);
+      const { multisig} = await loadFixture(deployMultisigContract);
 
       expect(await multisig.quorum()).to.equal(3);
     });
@@ -181,8 +181,60 @@ describe("Multisig", function () {
 
       await multisig.transfer(amount, otherAccount.address, token);
 
-
       await expect(multisig.connect(otherAccount4).approveTx(1)).to.be.revertedWith("not a valid signer");
-    })
+    });
+
+    it("shoul revert if signer has signed before", async function () {
+      const {multisig, token, otherAccount,otherAccount4} = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
+
+      await multisig.transfer(amount, otherAccount.address, token);
+
+      await expect(multisig.approveTx(1)).to.be.revertedWith("can't sign twice");
+    });
+
+    it("shoul check if transfer has been made when quorum is meet", async function () {
+      const {multisig, token, otherAccount,otherAccount1, otherAccount4} = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
+
+      await multisig.transfer(amount, otherAccount.address, token);
+      await multisig.connect(otherAccount).approveTx(1);
+      await multisig.connect(otherAccount1).approveTx(1);
+
+      const amtAfterTransfer = hre.ethers.parseUnits("480", 18)
+
+      expect(await token.balanceOf(multisig)).to.be.equal(amtAfterTransfer);
+
+    });
+  });
+
+  describe("proposeAndApproveQuorum", function () {
+    it("shoul revert if not a valid signer", async function () {
+      const {multisig, token, otherAccount,otherAccount4} = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
+
+      await multisig.transfer(amount, otherAccount.address, token);
+
+      await expect(multisig.connect(otherAccount4).proposeAndApproveQuorum(4)).to.be.revertedWith("not a valid signer");
+    });
+
+    it("Should input new quorum greater than 1", async function () {
+      const { multisig} = await loadFixture(deployMultisigContract);
+
+      //expect(await multisig.quorum()).to.equal(3);
+      await expect(multisig.proposeAndApproveQuorum(1)).to.be.revertedWith("invalid quorum");
+    });
+
+    it("Should input new quorum less than or equal to noOfValidSigners", async function () {
+      const { multisig} = await loadFixture(deployMultisigContract);
+
+      const noVSigner = await multisig.noOfValidSigners()
+
+      //expect(await multisig.quorum()).to.equal(3);
+      expect(await multisig.proposeAndApproveQuorum(2)).to.be.equal(noVSigner);
+    });
   });
 });
