@@ -118,34 +118,71 @@ describe("Multisig", function () {
       expect(txTimestamp).to.be.equal(currentTimestamp! +1);
     });
 
-    // it("Should check if transaction is submitted correctly", async function () {
-    //   const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
-    //   await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
-    //   const amount = hre.ethers.parseUnits("20", 18);
+    it("Should check if transaction is submitted correctly", async function () {
+      const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
 
-    //   await multisig.transfer(amount, otherAccount1.address, token);
+      await multisig.transfer(amount, otherAccount1.address, token);
 
-    //   expect(await multisig.txCount()).to.equal(1);
-
-
-    // });
+      expect(await multisig.txCount()).to.equal(1);
+    });
   });
 
   describe("Approve Trx", function () {
     it("Should revert if invalid trx id is passed", async function () {
       const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
 
-
-      expect(multisig.approveTx(0)).to.revertedWith("invalid tx id");
-
+      await multisig.transfer(amount, otherAccount1.address, token);
+      await  expect(multisig.connect(otherAccount1).approveTx(2)).to.revertedWith("invalid tx id");
     });
-    // it("Should revert if token address balance is less than amount", async function () {
-    //   const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
-    //   await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
-    //   const amount = hre.ethers.parseUnits("600", 18);
-    //   // await multisig.transfer(amount, otherAccount1.address, token);
+    it("Should revert if token address balance is less than amount", async function () {
+      const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("600", 18);
+      // await multisig.transfer(amount, otherAccount1.address, token);
 
-    //   expect(multisig.transfer(amount, otherAccount1.address, token)).to.revertedWith("insufficient funds");
-    // })
+      expect(multisig.transfer(amount, otherAccount1.address, token)).to.revertedWith("insufficient funds");
+    });
+
+    it("Should check if transaction is submitted correctly", async function () {
+      const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
+
+      await multisig.transfer(amount, otherAccount1.address, token);
+
+      await multisig.connect(otherAccount1).approveTx(1);
+      await multisig.connect(otherAccount2).approveTx(1);
+
+      await  expect(multisig.connect(otherAccount3).approveTx(1)).to.be.revertedWith("transaction already completed");
+      
+    });
+
+    it("Should check if noOfApproval is less than quorum", async function () {
+      const { multisig, token, otherAccount1, otherAccount2, otherAccount3 } = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
+
+      await multisig.transfer(amount, otherAccount1.address, token);
+
+      await multisig.connect(otherAccount1).approveTx(1);
+
+      expect((await multisig.getOneTransaction(1)).noOfApproval).to.be.equal(2);
+      
+    });
+
+    it("shoul revert if not a valid signer", async function () {
+      const {multisig, token, otherAccount,otherAccount4} = await loadFixture(deployMultisigContract);
+      await token.transfer(multisig, hre.ethers.parseUnits("500", 18));
+      const amount = hre.ethers.parseUnits("20", 18);
+
+      await multisig.transfer(amount, otherAccount.address, token);
+
+
+      await expect(multisig.connect(otherAccount4).approveTx(1)).to.be.revertedWith("not a valid signer");
+    })
   });
 });

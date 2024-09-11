@@ -138,4 +138,12 @@ contract MultiSig {
             }
         }
     }
+
+    function getOneTransaction(uint8 _txId) external view returns(Transaction memory){
+        require(transactions[_txId].id != 0, "invalid tx id");
+
+        Transaction memory trx = transactions[_txId];
+
+        return trx;
+    }
 }
