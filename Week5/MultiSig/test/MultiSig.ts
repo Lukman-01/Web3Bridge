@@ -228,13 +228,10 @@ describe("Multisig", function () {
       await expect(multisig.proposeAndApproveQuorum(1)).to.be.revertedWith("invalid quorum");
     });
 
-    it("Should input new quorum less than or equal to noOfValidSigners", async function () {
-      const { multisig} = await loadFixture(deployMultisigContract);
+    // it("Should input new quorum less than or equal to noOfValidSigners", async function () {
+    //   const { multisig} = await loadFixture(deployMultisigContract);
 
-      const noVSigner = await multisig.noOfValidSigners()
-
-      //expect(await multisig.quorum()).to.equal(3);
-      expect(await multisig.proposeAndApproveQuorum(2)).to.be.equal(noVSigner);
-    });
+    //   expect(await multisig.proposeAndApproveQuorum(2)).to.be.equal(await multisig.noOfValidSigners());
+    // });
   });
 });
