@@ -5,7 +5,7 @@ async function main() {
     const ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
     const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
     const DAI = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
-    const PAIR_ADDRESS = "0xAE461cA67B15dc8dc81CE7615e0320dA1A9aB8D5"; // Ensure this is correct
+    const PAIR_ADDRESS = "0xAE461cA67B15dc8dc81CE7615e0320dA1A9aB8D5"; 
 
     const TOKEN_HOLDER = "0xf584F8728B874a6a5c7A8d4d387C9aae9172D621";
 
@@ -16,7 +16,7 @@ async function main() {
     const amountBDesired = ethers.parseUnits("2", 18); // DAI (18 decimals)
     const amountAMin = ethers.parseUnits("0", 6); // Minimum amount of USDC
     const amountBMin = ethers.parseUnits("0", 18); // Minimum amount of DAI
-    const liquidityAmount = ethers.parseUnits("0.00000088319034449", 18); // The actual LP token amount obtained
+    const liquidityAmount = ethers.parseUnits("0.00000088319034449", 18); 
 
     const USDC_Contract = await ethers.getContractAt("IERC20", USDC, impersonatedSigner);
     const DAI_Contract = await ethers.getContractAt("IERC20", DAI, impersonatedSigner);
