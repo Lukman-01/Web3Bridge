@@ -16,7 +16,7 @@ async function main() {
     const amountBDesired = ethers.parseUnits("2", 18); // DAI (18 decimals)
     const amountAMin = ethers.parseUnits("0", 6); // Minimum amount of USDC
     const amountBMin = ethers.parseUnits("0", 18); // Minimum amount of DAI
-    const liquidityAmount = ethers.parseUnits("1", 18); // Adjust if necessary
+    const liquidityAmount = ethers.parseUnits("0.00000088319034449", 18); // The actual LP token amount obtained
 
     const USDC_Contract = await ethers.getContractAt("IERC20", USDC, impersonatedSigner);
     const DAI_Contract = await ethers.getContractAt("IERC20", DAI, impersonatedSigner);
@@ -56,16 +56,20 @@ async function main() {
     const lpTokenBalAfterAdding = await PAIR_Contract.balanceOf(impersonatedSigner.address);
     console.log("LP Token balance after adding liquidity", ethers.formatUnits(lpTokenBalAfterAdding, 18));
 
-    // Now, remove liquidity
-    // Approve the router to spend LP tokens
-    await PAIR_Contract.approve(ROUTER_ADDRESS, liquidityAmount);
-
-    const lpTokenBalBeforeRemoving = await PAIR_Contract.balanceOf(impersonatedSigner.address);
-    if (lpTokenBalBeforeRemoving < (liquidityAmount)) {
+    // Ensure sufficient LP tokens for removal
+    if (lpTokenBalAfterAdding < (liquidityAmount)) {
         console.error("Insufficient LP tokens to remove liquidity");
         process.exitCode = 1;
         return;
     }
+
+    const usdcBalAfterAddingLiquidity = await USDC_Contract.balanceOf(impersonatedSigner.address);
+    const daiBalAfterAddingLiquidity = await DAI_Contract.balanceOf(impersonatedSigner.address);
+    console.log("USDC balance before adding liquidity", ethers.formatUnits(usdcBalAfterAddingLiquidity, 6));
+    console.log("DAI balance before adding liquidity", ethers.formatUnits(daiBalAfterAddingLiquidity, 18));
+
+    // Approve the router to spend LP tokens
+    await PAIR_Contract.approve(ROUTER_ADDRESS, liquidityAmount);
 
     // Remove liquidity
     const removeLiquidityTx = await ROUTER.removeLiquidity(
