@@ -28,7 +28,7 @@ async function main() {
     console.log("usdc balance before swap", Number(usdcBal));
     console.log("dai balance before swap", Number(daiBal));
 
-    await ROUTER.swapTokensForExactTokens(
+    const res = await ROUTER.swapTokensForExactTokens(
         amountOut,
         amountInMax,
         [USDC, DAI],
@@ -36,6 +36,8 @@ async function main() {
         deadline
     );
 
+    console.log(res);
+    
     const usdcBalAfter = await USDC_Contract.balanceOf(impersonatedSigner.address);
     const daiBalAfter = await DAI_Contract.balanceOf(impersonatedSigner.address);
 

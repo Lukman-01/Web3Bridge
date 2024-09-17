@@ -44,7 +44,8 @@ async function main() {
       deadline
     );
 
-    await liquidity.wait();  // Wait for the transaction to be mined
+    const addliq = await liquidity.wait();  // Wait for the transaction to be mined
+    console.log(addliq);
 
     const usdcBalAfter = await USDC_Contract.balanceOf(impersonatedSigner.address);
     const daiBalAfter = await DAI_Contract.balanceOf(impersonatedSigner.address);

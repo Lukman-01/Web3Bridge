@@ -51,6 +51,7 @@ async function main() {
     await addLiquidityTx.wait(); // Wait for the transaction to be mined
 
     console.log("Liquidity added successfully!");
+    console.log(addLiquidityTx);
 
     // Check LP token balance after adding liquidity
     const lpTokenBalAfterAdding = await PAIR_Contract.balanceOf(impersonatedSigner.address);
@@ -83,6 +84,8 @@ async function main() {
     );
 
     await removeLiquidityTx.wait(); // Wait for the transaction to be mined
+
+    console.log(removeLiquidityTx);
 
     // Check final balances
     const usdcBalAfter = await USDC_Contract.balanceOf(impersonatedSigner.address);
