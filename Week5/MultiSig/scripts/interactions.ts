@@ -5,7 +5,7 @@ async function main() {
     // const factoryContractAddr = "0x80345491d7A4e513cafB4fE995750fbe0De4D794";
     // const tokenAddr = "0xe3C17c44D9A4b142D2E44E61c71987f0eF8b61b9";
 
-    const factoryContractAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    const factoryContractAddr = "0x5FbDB2315678afecb367f032d93F642f64180a";
     const tokenAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
     const factoryContract = await ethers.getContractAt("IMultisigFactory", factoryContractAddr);

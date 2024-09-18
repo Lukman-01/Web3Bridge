@@ -6,7 +6,7 @@ const MultisigFactoryModule = buildModule("MultisigFactoryModule", (m) => {
 
   const erc20 = m.contract("Token");
 
-  return { multisigFactory };
+  return { multisigFactory, erc20 };
 });
 
 export default MultisigFactoryModule;
