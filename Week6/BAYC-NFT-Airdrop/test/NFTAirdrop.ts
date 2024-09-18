@@ -1,127 +1,123 @@
-import {
-  time,
-  loadFixture,
-} from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
-import hre from "hardhat";
+import { ethers } from "hardhat";
+import { MerkleTree } from "merkletreejs";
+import keccak256 from "keccak256";
+import helpers from "@nomicfoundation/hardhat-network-helpers";
+import { setBalance, impersonateAccount } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Lock", function () {
-  // We define a fixture to reuse the same setup in every test.
-  // We use loadFixture to run this setup once, snapshot that state,
-  // and reset Hardhat Network to that snapshot in every test.
-  async function deployOneYearLockFixture() {
-    const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-    const ONE_GWEI = 1_000_000_000;
+describe("MerkleAirdropCoreFuncsTest", function () {
+  let merkleAirdrop: any,
+    token: any,
+    owner: any,
+    addr1 = '0xe2A83b15FC300D8457eB9E176f98d92a8FF40a49',
+    addr2 = '0x6b4DF334368b09f87B3722449703060EEf284126',
+    addr3 = '0x6b4DF334368b09f87B3722449703060EEf284126',
+    addrWithoutNFT: any;
 
-    const lockedAmount = ONE_GWEI;
-    const unlockTime = (await time.latest()) + ONE_YEAR_IN_SECS;
+  let merkleRoot, merkleTree: any;
+  let users: any[] = [];
 
-    // Contracts are deployed using the first signer/account by default
-    const [owner, otherAccount] = await hre.ethers.getSigners();
+  before(async function () {
+    [owner, addrWithoutNFT] = await ethers.getSigners();
 
-    const Lock = await hre.ethers.getContractFactory("Lock");
-    const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+    await setBalance(addr1, ethers.parseEther("30"));
+    await setBalance(addr2, ethers.parseEther("30"));
+    await setBalance(addr3, ethers.parseEther("30"));
 
-    return { lock, unlockTime, lockedAmount, owner, otherAccount };
-  }
+    // Deploy a mock ERC20 token
+    const erc20Token = await ethers.getContractFactory("AirdropToken");
+    token = await erc20Token.deploy();
 
-  describe("Deployment", function () {
-    it("Should set the right unlockTime", async function () {
-      const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
+    // Create leaves for Merkle Tree
+    users = [
+      { address: addr1, amount: 30000 },
+      { address: addr2, amount: 10000 },
+      { address: addr3, amount: 5000 },
+      { address: addrWithoutNFT.address, amount: 5000 },
+    ];
 
-      expect(await lock.unlockTime()).to.equal(unlockTime);
-    });
+    const leaves = users.map((user) =>
+      keccak256(
+        ethers.solidityPacked(
+          ["address", "uint256"],
+          [user.address, user.amount]
+        )
+      )
+    );
+    merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
+    merkleRoot = merkleTree.getRoot().toString("hex");
 
-    it("Should set the right owner", async function () {
-      const { lock, owner } = await loadFixture(deployOneYearLockFixture);
+    // Deploy MerkleAirdrop contract
+    const MerkleAirdropFactory = await ethers.getContractFactory(
+      "NFTAirdrop"
+    );
+    merkleAirdrop = await MerkleAirdropFactory.deploy(token, `0x${merkleRoot}`);
 
-      expect(await lock.owner()).to.equal(owner.address);
-    });
-
-    it("Should receive and store the funds to lock", async function () {
-      const { lock, lockedAmount } = await loadFixture(
-        deployOneYearLockFixture
-      );
-
-      expect(await hre.ethers.provider.getBalance(lock.target)).to.equal(
-        lockedAmount
-      );
-    });
-
-    it("Should fail if the unlockTime is not in the future", async function () {
-      // We don't use the fixture here because we want a different deployment
-      const latestTime = await time.latest();
-      const Lock = await hre.ethers.getContractFactory("Lock");
-      await expect(Lock.deploy(latestTime, { value: 1 })).to.be.revertedWith(
-        "Unlock time should be in the future"
-      );
-    });
+    // Transfer tokens to contract
+    await token.transfer(merkleAirdrop, 100000);
   });
 
-  describe("Withdrawals", function () {
-    describe("Validations", function () {
-      it("Should revert with the right error if called too soon", async function () {
-        const { lock } = await loadFixture(deployOneYearLockFixture);
+  it("Should allow the owner to deposit tokens into the contract", async function () {
+    await token.connect(owner).approve(merkleAirdrop, 500);
+    await expect(merkleAirdrop.depositIntoContract(500))
+      .to.emit(merkleAirdrop, "DepositIntoContractSuccessful")
+      .withArgs(owner.address, 500);
+  });
 
-        await expect(lock.withdraw()).to.be.revertedWith(
-          "You can't withdraw yet"
-        );
-      });
+  it("Should allow eligible users with bayc nft to claim their tokens", async function () {
+    const leaf = keccak256(
+      ethers.solidityPacked(
+        ["address", "uint256"],
+        [addr1, 30000]
+      )
+    );
+    const proof = merkleTree.getHexProof(leaf);
 
-      it("Should revert with the right error if called from another account", async function () {
-        const { lock, unlockTime, otherAccount } = await loadFixture(
-          deployOneYearLockFixture
-        );
+    await impersonateAccount(addr1);
+    const impersonatedSigner = await ethers.getSigner(addr1);
 
-        // We can increase the time in Hardhat Network
-        await time.increaseTo(unlockTime);
+    await expect(
+      merkleAirdrop
+        .connect(impersonatedSigner)
+        .claimReward(30000, proof)
+    ).to.emit(merkleAirdrop, "UserClaimedTokens");
+  });
 
-        // We use lock.connect() to send a transaction from another account
-        await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
-          "You aren't the owner"
-        );
-      });
+  it("Should not allow a user without the BAYC NFT to claim tokens", async function () {
+    const user = users[users.length-1];
+    const leaf = keccak256(
+      ethers.solidityPacked(["address", "uint256"], [user.address, user.amount])
+    );
+    const proof = merkleTree.getHexProof(leaf);
 
-      it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
-        const { lock, unlockTime } = await loadFixture(
-          deployOneYearLockFixture
-        );
+    await expect(
+      merkleAirdrop.connect(addrWithoutNFT).claimReward(user.amount, proof)
+    ).to.be.revertedWithCustomError(merkleAirdrop, "YouDontHaveBAYCNFT");
+  });
 
-        // Transactions are sent using the first signer by default
-        await time.increaseTo(unlockTime);
+  it("Should not allow a user to claim tokens more than once", async function () {
+    const user = users[0];
+    const leaf = keccak256(
+      ethers.solidityPacked(["address", "uint256"], [user.address, user.amount])
+    );
+    const proof = merkleTree.getHexProof(leaf);
 
-        await expect(lock.withdraw()).not.to.be.reverted;
-      });
-    });
+    await impersonateAccount(addr1);
+    const impersonatedSigner = await ethers.getSigner(addr1);
 
-    describe("Events", function () {
-      it("Should emit an event on withdrawals", async function () {
-        const { lock, unlockTime, lockedAmount } = await loadFixture(
-          deployOneYearLockFixture
-        );
+    await expect(
+      merkleAirdrop.connect(impersonatedSigner).claimReward(user.amount, proof)
+    ).to.be.revertedWithCustomError(merkleAirdrop, "UserAlreadyClaimed");
+  });
 
-        await time.increaseTo(unlockTime);
+  it("Should revert if the user provides an invalid proof", async function () {
+    const invalidProof = merkleTree.getHexProof(keccak256("invalid_data"));
 
-        await expect(lock.withdraw())
-          .to.emit(lock, "Withdrawal")
-          .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
-      });
-    });
+    await impersonateAccount(addr2);
+    const impersonatedSigner = await ethers.getSigner(addr2);
 
-    describe("Transfers", function () {
-      it("Should transfer the funds to the owner", async function () {
-        const { lock, unlockTime, lockedAmount, owner } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw()).to.changeEtherBalances(
-          [owner, lock],
-          [lockedAmount, -lockedAmount]
-        );
-      });
-    });
+    await expect(
+      merkleAirdrop.connect(impersonatedSigner).claimReward(300, invalidProof)
+    ).to.be.revertedWithCustomError(merkleAirdrop, "SorryYouAreNotEligible");
   });
 });

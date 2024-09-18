@@ -15,7 +15,7 @@ describe("MerkleAirdropHe", function () {
     [owner, addr1, addr2, addr3] = await ethers.getSigners();
 
     // Deploy a mock ERC20 token contract
-    const erc20Token = await ethers.getContractFactory("Web3CXI");
+    const erc20Token = await ethers.getContractFactory("AirdropToken");
     token = await erc20Token.deploy();
 
     // Initialize users with their respective addresses and airdrop amounts
@@ -54,7 +54,7 @@ describe("MerkleAirdropHe", function () {
   // Test that the owner can deposit tokens into the airdrop contract
   it("Should allow the owner to deposit tokens into the contract", async function () {
     // Approve the contract to spend the owner's tokens
-    await token.connect(owner).approve(merkleAirdrop, 500);
+    await token.approve(merkleAirdrop, 500);
     
     // Deposit 500 tokens into the contract and expect the "DepositIntoContractSuccessful" event
     await expect(merkleAirdrop.depositIntoContract(500))
