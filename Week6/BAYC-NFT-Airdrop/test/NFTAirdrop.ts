@@ -57,14 +57,14 @@ describe("MerkleAirdropCoreFuncsTest", function () {
     await token.transfer(merkleAirdrop, 100000);
   });
 
-  it("Should allow the owner to deposit tokens into the contract", async function () {
+  it("Should permit owner to deposit Airdrop token into the contract", async function () {
     await token.connect(owner).approve(merkleAirdrop, 500);
     await expect(merkleAirdrop.depositIntoContract(500))
       .to.emit(merkleAirdrop, "DepositIntoContractSuccessful")
       .withArgs(owner.address, 500);
   });
 
-  it("Should allow eligible users with bayc nft to claim their tokens", async function () {
+  it("Should allow qualified users with BAYC NFT to be able to claim Token", async function () {
     const leaf = keccak256(
       ethers.solidityPacked(
         ["address", "uint256"],
@@ -83,7 +83,7 @@ describe("MerkleAirdropCoreFuncsTest", function () {
     ).to.emit(merkleAirdrop, "UserClaimedTokens");
   });
 
-  it("Should not allow a user without the BAYC NFT to claim tokens", async function () {
+  it("Should not permit a user without the BAYC NFT to claim tokens", async function () {
     const user = users[users.length-1];
     const leaf = keccak256(
       ethers.solidityPacked(["address", "uint256"], [user.address, user.amount])
@@ -110,7 +110,7 @@ describe("MerkleAirdropCoreFuncsTest", function () {
     ).to.be.revertedWithCustomError(merkleAirdrop, "UserAlreadyClaimed");
   });
 
-  it("Should revert if the user provides an invalid proof", async function () {
+  it("Should not allow user to provides an invalid proof", async function () {
     const invalidProof = merkleTree.getHexProof(keccak256("invalid_data"));
 
     await impersonateAccount(addr2);
