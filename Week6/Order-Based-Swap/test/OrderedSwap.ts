@@ -6,25 +6,36 @@ import { expect } from "chai";
 import hre from "hardhat";
 
 describe("Deployment", function () {
-  async function deployToken() {
+  async function deployGUZToken() {
 
     const [owner, otherAccount] = await hre.ethers.getSigners();
 
-    const Token = await hre.ethers.getContractFactory("Token");
-    const token = await Token.deploy();
+    const Token = await hre.ethers.getContractFactory("GUZToken");
+    const gtoken = await Token.deploy();
 
-    return { token, owner, otherAccount };
+    return { gtoken, owner, otherAccount };
+  }
+
+  async function deployW3BToken() {
+
+    const [owner, otherAccount] = await hre.ethers.getSigners();
+
+    const Token = await hre.ethers.getContractFactory("W3BToken");
+    const wtoken = await Token.deploy();
+
+    return { wtoken, owner, otherAccount };
   }
 
   async function deployOrderedSwap() {
 
     const [owner, otherAccount] = await hre.ethers.getSigners();
-    const {token} = await loadFixture(deployToken);
+    const {gtoken} = await loadFixture(deployGUZToken);
+    const {wtoken} = await loadFixture(deployW3BToken);
 
     const Swap = await hre.ethers.getContractFactory("OrderedSwap");
     const swap = await Swap.deploy();
 
-    return { token, swap, owner, otherAccount };
+    return { gtoken, wtoken, swap, owner, otherAccount };
   }
 
   describe("Deployment", function () {
