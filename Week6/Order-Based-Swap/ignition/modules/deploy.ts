@@ -1,12 +1,14 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-const ContractsModule = buildModule("LockModule", (m) => {
+const ContractsModule = buildModule("ContractsModule", (m) => {
 
-  const swap = m.contract("OrderedSwap");
+  const swap = m.contract("OrderedSwapFactory");
 
-  const token = m.contract("Token");
+  const gtoken = m.contract("GUZToken");
 
-  return { swap, token };
+  const wtoken = m.contract("W3BToken");
+
+  return { swap, gtoken, wtoken};
 });
 
 export default ContractsModule;
