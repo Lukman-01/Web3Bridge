@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTMarketplace is ERC721, Ownable(msg.sender){
+contract NFTMarketplace is ERC721 {
+    address private _owner;
     uint256 public nextTokenId;
 
     struct Listing {
@@ -16,7 +16,14 @@ contract NFTMarketplace is ERC721, Ownable(msg.sender){
     // Mapping from token ID to its listing details
     mapping(uint256 => Listing) public listings;
 
+    // Modifier to restrict function access to the contract owner
+    modifier onlyOwner() {
+        require(msg.sender == _owner, "Caller is not the owner");
+        _;
+    }
+
     constructor() ERC721("NFTMarketplace", "NFTM") {
+        _owner = msg.sender; // Set the deployer as the initial owner
         nextTokenId = 1; // Initialize token ID to 1
     }
 
@@ -95,6 +102,22 @@ contract NFTMarketplace is ERC721, Ownable(msg.sender){
      * @dev Withdraw contract's balance. Only the owner of the contract can withdraw.
      */
     function withdraw() external onlyOwner {
-        payable(owner()).transfer(address(this).balance);
+        payable(_owner).transfer(address(this).balance);
+    }
+
+    /**
+     * @dev Returns the address of the contract owner.
+     */
+    function owner() public view returns (address) {
+        return _owner;
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "New owner is the zero address");
+        _owner = newOwner;
     }
 }

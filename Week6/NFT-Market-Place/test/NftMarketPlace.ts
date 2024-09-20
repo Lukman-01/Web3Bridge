@@ -41,7 +41,7 @@ describe("NFTMarketplace", function () {
 
       await expect(
         nftMarketPlace.connect(otherAccount).mint(otherAccount.address)
-      ).to.be.revertedWith("Ownable: caller is not the owner");
+      ).to.be.revertedWith("Caller is not the owner");
     });
   });
 
@@ -109,7 +109,7 @@ describe("NFTMarketplace", function () {
 
       await nftMarketPlace.connect(owner).buy(1, { value: hre.ethers.parseEther("1") });
 
-      const contractBalanceBefore = await hre.ethers.provider.getBalance(nftMarketPlace.address);
+      const contractBalanceBefore = await hre.ethers.provider.getBalance(nftMarketPlace);
       expect(contractBalanceBefore).to.equal(hre.ethers.parseEther("1"));
 
       await expect(nftMarketPlace.withdraw())
@@ -121,7 +121,7 @@ describe("NFTMarketplace", function () {
 
       await expect(
         nftMarketPlace.connect(otherAccount).withdraw()
-      ).to.be.revertedWith("Ownable: caller is not the owner");
+      ).to.be.revertedWith("Caller is not the owner");
     });
   });
 });
