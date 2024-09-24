@@ -23,10 +23,10 @@ contract BankAccount {
     uint256 public userCount;
 
     // Mapping from user addresses to user data
-    mapping(address => User) private users;
+    mapping(address => User) public users;
 
     // List of user addresses
-    address[] private userAddresses;
+    address[] public userAddresses;
 
     // Custom errors for specific failure conditions
     error AlreadyRegistered();
