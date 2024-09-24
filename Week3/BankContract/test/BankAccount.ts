@@ -115,6 +115,54 @@ import {
   
         await expect(bankAccount.connect(acc2).transfer(acc1, value)).to.be.revertedWithCustomError(bankAccount,"NotRegistered");
       });
+
+      it("Should check if the reciever is registered before transfer", async function () {
+        const { bankAccount } = await loadFixture(deployBankAccount);
+        const [acc1, acc2, acc3] = await hre.ethers.getSigners();
+  
+        const name = 'Abdulyekeen Lukman';
+        const age = 21;
+        await bankAccount.connect(acc1).createAccount(name, age);
+        await bankAccount.connect(acc2).createAccount(name, age);
+  
+        const value = ethers.parseUnits("2", 18);
+        await bankAccount.connect(acc1).deposit({value:value});
+  
+        await expect(bankAccount.connect(acc2).transfer(acc3, value)).to.be.revertedWithCustomError(bankAccount,"NotRegistered");
+      });
+
+      it("Should check if sender balance greater than amount to be transfered", async function () {
+        const { bankAccount } = await loadFixture(deployBankAccount);
+        const [acc1, acc2] = await hre.ethers.getSigners();
+  
+        const name = 'Abdulyekeen Lukman';
+        const age = 21;
+        await bankAccount.connect(acc1).createAccount(name, age);
+        await bankAccount.connect(acc2).createAccount(name, age);
+  
+        const vdeposit = ethers.parseUnits("3", 18);
+        await bankAccount.connect(acc1).deposit({value:vdeposit});
+        const vtrf = ethers.parseUnits("5", 18);
+
+  
+        await expect(bankAccount.connect(acc1).transfer(acc2, vtrf)).to.be.revertedWithCustomError(bankAccount,"InsufficientBalance");
+      });
+
+      it("Should emmit event transfered successfully", async function () {
+        const { bankAccount } = await loadFixture(deployBankAccount);
+        const [acc1, acc2] = await hre.ethers.getSigners();
+  
+        const name = 'Abdulyekeen Lukman';
+        const age = 21;
+        await bankAccount.connect(acc1).createAccount(name, age);
+        await bankAccount.connect(acc2).createAccount(name, age);
+  
+        const value = ethers.parseUnits("2", 18);
+        await bankAccount.connect(acc1).deposit({value:value});
+  
+        expect (await bankAccount.connect(acc1).transfer(acc2, value)).to.emit(bankAccount,"TransferMade")
+        .withArgs(acc1,acc2,value);
+      });
   
     });
   });
