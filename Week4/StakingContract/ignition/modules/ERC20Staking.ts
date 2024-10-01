@@ -1,6 +1,6 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-const tokenAddress = "0xe47fCcABcC282fE9A621c88Ad9E8749a38f61C15";
+const tokenAddress = "0xccA3A3d3a87c02ee547159569b14e18679CE83A7";
 const rewardRate = 2;
 
 const ERC20StakingModule = buildModule("ERC20StakingModule", (m) => {

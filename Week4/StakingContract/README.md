@@ -70,3 +70,23 @@ Deploy the contracts to the Lisk-Sepolia testnet:
 ```bash
 npx hardhat ignition deploy ./ignition/modules/SaveERC20.ts --network lisk-sepolia
 ```
+
+Deployed Addresses
+
+ERC20TokenModule#ERC20Token - 0xccA3A3d3a87c02ee547159569b14e18679CE83A7
+ERC20StakingModule#ERC20Staking - 0x87E1b3f6975bbA4E3A07b36b3F1ae98A1785928f
+EtherStakingModule#EtherStaking - 0x414Db5eB1DB3A8659AF4c683A9d037f567109611
+
+Verifying deployed contracts
+
+Verifying contract "contracts/ERC20Token.sol:ERC20Token" for network lisk-sepolia...
+Contract contracts/ERC20Token.sol:ERC20Token already verified on network lisk-sepolia:
+  - https://sepolia-blockscout.lisk.com//address/0xccA3A3d3a87c02ee547159569b14e18679CE83A7#code
+
+Verifying contract "contracts/ERC20Staking.sol:ERC20Staking" for network lisk-sepolia...
+Contract contracts/ERC20Staking.sol:ERC20Staking already verified on network lisk-sepolia:
+  - https://sepolia-blockscout.lisk.com//address/0x87E1b3f6975bbA4E3A07b36b3F1ae98A1785928f#code
+
+Verifying contract "contracts/EtherStaking.sol:EtherStaking" for network lisk-sepolia...
+Successfully verified contract "contracts/EtherStaking.sol:EtherStaking" for network lisk-sepolia:
+  - https://sepolia-blockscout.lisk.com//address/0x414Db5eB1DB3A8659AF4c683A9d037f567109611#code
