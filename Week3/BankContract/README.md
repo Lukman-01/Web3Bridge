@@ -68,7 +68,7 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 
 - BankAccount contract deployed to: 0xCA2b7e76eAdAD48348d5f164d98C56BD9472457C
 
-- Successfully verified contract link: [Lisk Sepolia Blockscout Link](https://sepolia-blockscout.lisk.com/address/0xCA2b7e76eAdAD48348d5f164d98C56BD9472457C)
+- Successfully verified contract link: [Lisk Sepolia Blockscout Link](https://sepolia-blockscout.lisk.com/address/0xCA2b7e76eAdAD48348d5f164d98C56BD9472457C#code)
 
 ### Authors
 

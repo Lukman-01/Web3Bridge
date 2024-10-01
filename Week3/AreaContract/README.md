@@ -66,7 +66,7 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 
 - AreaOfShapes contract deployed to: 0x1E2212649f12eA45685900675215871663c4B1fc
 
-- Successfully verified contract link: [Lisk Sepolia Blockscout Link](https://sepolia-blockscout.lisk.com/address/0x1E2212649f12eA45685900675215871663c4B1fc)
+- Successfully verified contract link: [Lisk Sepolia Blockscout Link](https://sepolia-blockscout.lisk.com/address/0x1E2212649f12eA45685900675215871663c4B1fc#code)
 
 ### Authors
 
