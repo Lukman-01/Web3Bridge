@@ -125,3 +125,7 @@ To test the functionality locally using a forked Ethereum mainnet:
    ```bash
    npx hardhat run scripts/<script_name>.js --network localhost
    ```
+
+### Authors
+
+Abdulyekeen Lukman (Ibukun)

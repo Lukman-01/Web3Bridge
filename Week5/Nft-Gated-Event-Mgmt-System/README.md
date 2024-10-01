@@ -83,3 +83,7 @@ The project is built on Ethereum and leverages smart contracts to manage event a
    Verifying contract "contracts/NFTGatedEventManager.sol:NFTGatedEventManager" for network lisk-sepolia...
    Successfully verified contract "contracts/NFTGatedEventManager.sol:NFTGatedEventManager" for network lisk-sepolia:
    - https://sepolia-blockscout.lisk.com//address/0x7c8EF04F30Ea74B14Ded5A210bB8288382BE140b#code
+
+### Authors
+
+Abdulyekeen Lukman (Ibukun)

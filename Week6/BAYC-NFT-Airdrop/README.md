@@ -140,3 +140,7 @@ module.exports = {
   gasPrice: 10000000000,
 };
 ```
+
+### Authors
+
+Abdulyekeen Lukman (Ibukun)
