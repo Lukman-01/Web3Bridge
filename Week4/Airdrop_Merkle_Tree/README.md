@@ -65,8 +65,20 @@ This project consists of a Solidity smart contract for handling an ERC20 token a
 6. **Deploy the Contracts:**
    Deploy the contracts to the Lisk Sepolia network:
    ```bash
-   npx hardhat run scripts/deploy.js --network lisk-sepolia
+   npx hardhat ignition deploy ./ignition/modules/deploy.js --network lisk-sepolia 
    ```
+
+   ```bash
+   npx hardhat verify --network lisk-sepolia 0x12C416184C0962fbbd46d10a63D65BDDD0BC002f 0xBF7F035328bA48D9C77F31A8e5f6816d0E92dfC1 0x8f274e5f685051d5e320a9b9de911f3d3d5388eb6dfbb1ace1f685cc03ef9da4
+   ```
+
+### Deployment Details
+
+- Wallet address for deployment: 0x40feacdeee6f017fA2Bc1a8FB38b393Cf9022d71
+
+- CrowdFunding contract deployed to: 0xC03814F91a4Ae88A5f5d18F005e72A8D55218b75
+
+- Successfully verified contract link: [Lisk Sepolia Blockscout Link](https://sepolia-blockscout.lisk.com/address/0x12C416184C0962fbbd46d10a63D65BDDD0BC002f#code)
 
 ## Usage
 
