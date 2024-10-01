@@ -64,9 +64,9 @@ npx hardhat test
 
 To deploy the contracts to the Lisk Sepolia testnet, follow these steps:
 
-1. **Deploy the `Web3CXI` contract**:
+1. **Deploy the `Token` contract**:
    ```bash
-   npx hardhat ignition deploy ./ignition/modules/Web3CXI.ts --network lisk-sepolia
+   npx hardhat ignition deploy ./ignition/modules/Token.ts --network lisk-sepolia
 
    Update the Web3CXI contract address in the SaveERC20 deploy script.
 
@@ -78,15 +78,27 @@ To deploy the contracts to the Lisk Sepolia testnet, follow these steps:
    Ensure the `SaveERC20` contract's module file (`SaveERC20.ts`) is correctly configured for deployment.
 
 3. **Record the deployed contract addresses**:
-   - `Web3CXI` deployed at: `<Web3CXI deployed address>`
-   - `SaveERC20` deployed at: `<SaveERC20 deployed address>`
+   Deployed Addresses
+
+   TokenModule#Token - 0x4836F1CeE8561f8137f4AFd4b3C6594e4aCFD663
+   SaveERC20Module#SaveERC20 - 0x0aEf452F1bd534cc3F62B15057188fF53B395bf2
+
+   Verifying deployed contracts
+
+   Verifying contract "contracts/Token.sol:Token" for network lisk-sepolia...
+   Successfully verified contract "contracts/Token.sol:Token" for network lisk-sepolia:
+   - https://sepolia-blockscout.lisk.com//address/0x4836F1CeE8561f8137f4AFd4b3C6594e4aCFD663#code
+
+   Verifying contract "contracts/SaveERC20.sol:SaveERC20" for network lisk-sepolia...
+   Successfully verified contract "contracts/SaveERC20.sol:SaveERC20" for network lisk-sepolia:
+   - https://sepolia-blockscout.lisk.com//address/0x0aEf452F1bd534cc3F62B15057188fF53B395bf2#code
 
 ## Interacting with the Contracts
 
 After deploying the contracts, you can interact with them using a script. Here's how:
 
 1. **Edit the interaction script (`scripts/interaction.ts`)**:
-   - Update the `web3CXITokenAddress` and `saveERC20ContractAddress` variables with the deployed addresses.
+   - Update the `TokenAddress` and `saveERC20ContractAddress` variables with the deployed addresses.
 
 2. **Run the interaction script**:
    ```bash

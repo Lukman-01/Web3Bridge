@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.26;
 
 // Importing the ERC20 implementation from OpenZeppelin's library
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Web3CXI is ERC20("WEB3CXI Token", "WCXI") {
+contract Token is ERC20("Token", "WCXI") {
     // The address of the contract owner
     address public owner;
 
