@@ -79,5 +79,5 @@ The `OnChainNFT` contract is an Ethereum smart contract for creating and managin
 2. **Deploy Contracts**:
    Create a deployment script (e.g., `scripts/deploy.ts`) and run:
    ```bash
-   npx hardhat ignition deploy ./ignition/modules/MultiSig.ts --network lisk-sepolia
+   npx hardhat ignition deploy ./ignition/modules/deploy.ts --network sepolia
    ```
