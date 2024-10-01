@@ -93,3 +93,7 @@ This project consists of a Solidity smart contract for handling an ERC20 token a
 
 - **Withdrawing Remaining Tokens:**
   The contract owner can withdraw any unclaimed tokens from the contract.
+
+### Authors
+
+Abdulyekeen Lukman(Ibukun)

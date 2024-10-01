@@ -1,7 +1,3 @@
-Here’s a sample README file for your repository based on the two smart contracts and the deployment to the Lisk blockchain:
-
----
-
 # Ether and ERC20 Token Staking Contracts
 
 This repository contains two smart contracts for staking Ether and ERC20 tokens on the Lisk blockchain. These contracts allow users to stake their assets and earn rewards based on a predefined daily reward rate.
@@ -90,3 +86,8 @@ Contract contracts/ERC20Staking.sol:ERC20Staking already verified on network lis
 Verifying contract "contracts/EtherStaking.sol:EtherStaking" for network lisk-sepolia...
 Successfully verified contract "contracts/EtherStaking.sol:EtherStaking" for network lisk-sepolia:
   - https://sepolia-blockscout.lisk.com//address/0x414Db5eB1DB3A8659AF4c683A9d037f567109611#code
+
+
+### Authors
+
+Abdulyekeen Lukman(Ibukun)
