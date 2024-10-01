@@ -66,12 +66,20 @@ The project is built on Ethereum and leverages smart contracts to manage event a
 
 2. Deploy the contracts to the desired network (e.g., Sepolia):
    ```bash
-   npx hardhat run scripts/deploy.js --network sepolia
+   npx hardhat ignition deploy ./ignition/modules/NFTGatedEventManager.ts --network lisk-sepolia --verify
    ```
 
-### Running Tests
+   Deployed Addresses
 
-1. Execute tests:
-   ```bash
-   npx hardhat test
-   ```
+   MyNFTModule#MyNFT - 0x106568A18A91Ad0FFb567E761caEDDE0E47d2382
+   EventManageModule#NFTGatedEventManager - 0x7c8EF04F30Ea74B14Ded5A210bB8288382BE140b
+
+   Verifying deployed contracts
+
+   Verifying contract "contracts/MyNFT.sol:MyNFT" for network lisk-sepolia...
+   Contract contracts/MyNFT.sol:MyNFT already verified on network lisk-sepolia:
+   - https://sepolia-blockscout.lisk.com//address/0x106568A18A91Ad0FFb567E761caEDDE0E47d2382#code
+
+   Verifying contract "contracts/NFTGatedEventManager.sol:NFTGatedEventManager" for network lisk-sepolia...
+   Successfully verified contract "contracts/NFTGatedEventManager.sol:NFTGatedEventManager" for network lisk-sepolia:
+   - https://sepolia-blockscout.lisk.com//address/0x7c8EF04F30Ea74B14Ded5A210bB8288382BE140b#code
