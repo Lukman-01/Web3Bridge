@@ -1,7 +1,3 @@
-Here's the updated README mentioning the deployment on the Lisk Sepolia network with the verified contract link:
-
----
-
 # AreaOfShapes
 
 This Solidity program implements the `AreaOfShapes` smart contract, providing basic functionality to calculate the area of different geometric shapes, including squares, rectangles, and triangles. The contract is designed for educational purposes and demonstrates fundamental Solidity programming concepts.

@@ -4,14 +4,14 @@ This Solidity program implements the `BankAccount` smart contract, providing bas
 
 ## Description
 
-The `BankAccount` contract is built on the Ethereum blockchain using Solidity. It includes the following functionalities:
+The `BankAccount` contract is built on the Ethereum-compatible Lisk Sepolia network using Solidity. It includes the following functionalities:
 - **Account Creation**: Users can create an account with their name and age.
 - **Deposits**: Users can deposit Ether into their accounts.
 - **Transfers**: Users can transfer Ether from their accounts to other users.
 - **Withdrawals**: Users can withdraw Ether from their accounts.
 - **Owner Withdrawals**: The contract owner can withdraw Ether directly from the contract balance.
 
-This project includes a Hardhat setup for deploying and testing the smart contract on the Ethereum Sepolia test network.
+This project includes a Hardhat setup for deploying and testing the smart contract on the Lisk Sepolia test network.
 
 ## Getting Started
 
@@ -21,14 +21,14 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 - npm (Node Package Manager)
 - Hardhat
 - An Ethereum wallet with Sepolia testnet funds
-- `.env` file with your Alchemy HTTP URL and private key
+- `.env` file with your Lisk Sepolia RPC URL and private key
 
 ### Setting Up the Project
 
 1. **Clone the Repository**
 
    ```bash
-   git clone clone https://github.com/Lukman-01/Web3Bridge.git
+   git clone https://github.com/Lukman-01/Web3Bridge.git
    cd BankAccount
    ```
 
@@ -43,7 +43,6 @@ This project includes a Hardhat setup for deploying and testing the smart contra
    Create a `.env` file in the root directory with the following content:
 
    ```bash
-   ALCHEMY_HTTP_URL=your_alchemy_http_url
    PRIVATE_KEY=your_private_key
    ```
 
@@ -57,20 +56,20 @@ This project includes a Hardhat setup for deploying and testing the smart contra
 
 2. **Deploy the Contract**
 
-   You can deploy the contract to the Ethereum Sepolia testnet by running the following Hardhat task:
+   You can deploy the contract to the Lisk Sepolia testnet by running the following Hardhat task:
 
    ```bash
-   npx hardhat ignition deploy ignition/modules/deploy.ts --network sepolia --verify
+   npx hardhat ignition deploy ./ignition/modules/deploy.ts --network lisk-sepolia --verify
    ```
 
 ### Deployment Details
 
 - Wallet address for deployment: 0x40feacdeee6f017fA2Bc1a8FB38b393Cf9022d71
 
-- BankAccount contract deployed to: 0x103AD02a8FC10228C03a5B5fe8f29722A3405FC0
+- BankAccount contract deployed to: 0xCA2b7e76eAdAD48348d5f164d98C56BD9472457C
 
-- Successfully verified contract link: [Etherscan Link](https://sepolia.etherscan.io/address/0x103AD02a8FC10228C03a5B5fe8f29722A3405FC0)
+- Successfully verified contract link: [Lisk Sepolia Blockscout Link](https://sepolia-blockscout.lisk.com/address/0xCA2b7e76eAdAD48348d5f164d98C56BD9472457C)
 
 ### Authors
 
-Abdulyekeen Lukman(Ibukun)
+Abdulyekeen Lukman (Ibukun)
