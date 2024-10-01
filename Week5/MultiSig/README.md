@@ -115,7 +115,15 @@ This project implements a **Multisignature Wallet** (Multisig) and an **ERC-20 T
    npx hardhat ignition deploy ./ignition/modules/MultiSig.ts --network lisk-sepolia
    ```
 
-   After deployment, note the contract addresses that are printed in the console.
+   Deployed Addresses
+
+   MultisigFactoryModule#MultisigFactory - 0x850cC224Ae2ed490666CE64B73c331319E52BE6E
+
+   Verifying deployed contracts
+
+   Verifying contract "contracts/MultisigFactory.sol:MultisigFactory" for network lisk-sepolia...
+   Successfully verified contract "contracts/MultisigFactory.sol:MultisigFactory" for network lisk-sepolia:
+   - https://sepolia-blockscout.lisk.com//address/0x850cC224Ae2ed490666CE64B73c331319E52BE6E#code
 
 ## Testing
 
@@ -127,9 +135,7 @@ To run all the tests:
 npx hardhat test
 ```
 
-The tests cover:
 
-- Deployment of the `MultiSig` and `Token` contracts.
-- Multisig transaction creation and approval.
-- Token transfers with multisig approval.
-- Edge cases such as invalid signers, quorum changes, and more.
+### Authors
+
+Abdulyekeen Lukman(Ibukun)
