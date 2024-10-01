@@ -4,7 +4,7 @@ import {
 import { expect } from "chai";
 import hre from "hardhat";
 
-describe("OrderBasedSwap", function () {
+describe("OrderedSwap", function () {
 
   // Fixture to deploy GUZToken
   async function deployGUZToken() {
@@ -22,20 +22,20 @@ describe("OrderBasedSwap", function () {
     return { wtoken, owner, otherAccount };
   }
 
-  // Fixture to deploy the OrderBasedSwap contract and two tokens
+  // Fixture to deploy the OrderedSwap contract and two tokens
   async function deployOrderedSwap() {
     const [owner, otherAccount] = await hre.ethers.getSigners();
     const { gtoken } = await loadFixture(deployGUZToken);
     const { wtoken } = await loadFixture(deployW3BToken);
 
-    const Swap = await hre.ethers.getContractFactory("OrderBasedSwap");
+    const Swap = await hre.ethers.getContractFactory("OrderedSwap");
     const swap = await Swap.deploy();
     
     return { gtoken, wtoken, swap, owner, otherAccount };
   }
 
   describe("Deployment", function () {
-    it("Should deploy GUZ and W3B tokens and the OrderBasedSwap contract", async function () {
+    it("Should deploy GUZ and W3B tokens and the OrderedSwap contract", async function () {
       const { gtoken, wtoken, swap } = await loadFixture(deployOrderedSwap);
 
       expect(gtoken.address).to.properAddress;
@@ -53,7 +53,7 @@ describe("OrderBasedSwap", function () {
       await gtoken.approve(swap.address, amountDeposited);
 
       // Create an order (100 GUZ tokens in exchange for 20 W3B tokens)
-      await expect(swap.createOrder(gtoken.address, amountDeposited, hre.ethers.AddressZero, 0)) // Example placeholder, should replace AddressZero and amount
+      await expect(swap.createOrder(gtoken.address, amountDeposited, hre.ethers.constants.AddressZero, 0)) // Example placeholder, should replace AddressZero and amount
         .to.emit(swap, "OrderCreated");
     });
   });

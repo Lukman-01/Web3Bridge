@@ -2,7 +2,7 @@ import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 const ContractsModule = buildModule("ContractsModule", (m) => {
 
-  const swap = m.contract("OrderedSwapFactory");
+  const swap = m.contract("OrderedSwap");
 
   const gtoken = m.contract("GUZToken");
 

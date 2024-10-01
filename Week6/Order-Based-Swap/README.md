@@ -45,8 +45,28 @@ npx hardhat compile
 3. Deploy to Lisk Sepolia:
 
 ```bash
-npx hardhat ignition deploy ./ignition/modules/deploy.ts --network lisk-sepolia
+npx hardhat ignition deploy ./ignition/modules/deploy.ts --network lisk-sepolia --verify
 ```
+
+Deployed Addresses
+
+ContractsModule#GUZToken - 0xE35fd46855D592a67327d857a1a452b213E8d44d
+ContractsModule#OrderedSwap - 0xBfBF3bd2c91dd6B3DBc34c1b54dD0eF07C32af46
+ContractsModule#W3BToken - 0xF2E6B16435749EC715BeAead4CE9Ec6680713dba
+
+Verifying deployed contracts
+
+Verifying contract "contracts/GUZToken.sol:GUZToken" for network lisk-sepolia...
+Successfully verified contract "contracts/GUZToken.sol:GUZToken" for network lisk-sepolia:
+  - https://sepolia-blockscout.lisk.com//address/0xE35fd46855D592a67327d857a1a452b213E8d44d#code
+
+Verifying contract "contracts/OrderedSwap.sol:OrderedSwap" for network lisk-sepolia...
+Successfully verified contract "contracts/OrderedSwap.sol:OrderedSwap" for network lisk-sepolia:
+  - https://sepolia-blockscout.lisk.com//address/0xBfBF3bd2c91dd6B3DBc34c1b54dD0eF07C32af46#code
+
+Verifying contract "contracts/W3BToken.sol:W3BToken" for network lisk-sepolia...
+Successfully verified contract "contracts/W3BToken.sol:W3BToken" for network lisk-sepolia:
+  - https://sepolia-blockscout.lisk.com//address/0xF2E6B16435749EC715BeAead4CE9Ec6680713dba#code
 
 ## Usage
 
