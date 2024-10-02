@@ -80,3 +80,7 @@ Successfully verified contract "contracts/W3BToken.sol:W3BToken" for network lis
 
 - The `SwapFactory` contract allows users to create new instances of `OrderedSwap` contracts.
 - The contract tracks all created swap instances and provides a `getAllSwaps()` function to retrieve the addresses of all swap contracts.
+
+### Authors
+
+Abdulyekeen Lukman (Ibukun)
