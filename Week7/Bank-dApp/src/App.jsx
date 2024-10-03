@@ -1,17 +1,26 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useReadContract, useWriteContract } from "wagmi";
+import { useReadContract, useWriteContract,useWatchContractEvent } from "wagmi";
 import { ABI } from "../src/abi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { liskSepolia } from "viem/chains";
 import { config } from "./main";
 import { ethers } from "ethers";
 export default function App() {
-  const { writeContract } = useWriteContract();
+  const {writeContract, error } = useWriteContract();
   const [accountDetails, setAccountDetails] = useState({name: "", age: 0});
   const [loading, setIsLoading] = useState(false);
   const [withdrawalAmount, setwithdrawalAmount] = useState("");
   const [transferDetails, settransferDetails] = useState({receiver: "", amount: 0});
   const [userCount, setUserCount] = useState(0);
+  const [userAddress, setUserAddress] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
+
+  const { datainfo} = useReadContract({
+    abi: ABI,
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    functionName: "getUserInfo",
+    args: [userAddress],
+  });
 
   const { data } = useReadContract({
     abi: ABI,
@@ -77,10 +86,11 @@ export default function App() {
   };
 
   const handleCreateAccount = async ({ name, age }) => {
+    console.log(name,age);
     // event.preventDefault();
     setIsLoading(true);
     try {
-      writeContract({
+      const {} = writeContract({
         abi: ABI,
         address: import.meta.env.VITE_CONTRACT_ADDRESS,
         functionName: "createAccount",
@@ -108,21 +118,33 @@ export default function App() {
     }
   }
 
-  // const handleGetUser = async () => {
-  //   try {
-    
-  //     setUserCount(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
+  const fetchUserInfo = () => {
+    if (datainfo) {
+      console.log(datainfo);
+      setUserInfo(datainfo);
+    }
+  };
   const fetchUserCount = () => {
     if (data) {
       console.log(data.toString());
       setUserCount(data.toString());
     }
   };
+
+  useWatchContractEvent({
+    abi: ABI,
+    address: import.meta.env.VITE_CONTRACT_ADDRESS,
+    eventName: 'AccountCreated',
+    onLogs(logs) {
+      console.log('New logs!', logs)
+    },
+  });
+
+  useEffect(() => {
+    if(error) console.log(error?.toString());
+
+    if(error?.toString().includes('AlreadyRegistered')) alert("User Already Registered")
+  }, [error])
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -287,6 +309,54 @@ export default function App() {
                       >
                       Get User Count
                     </button>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="max-w-md mx-auto">
+                  <div className="space-y-4">
+                    {/* User Info Section */}
+                    <div>
+                      <label
+                        htmlFor="userAddress"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Enter User Address
+                      </label>
+                      <input
+                        type="text"
+                        id="userAddress"
+                        name="userAddress"
+                        value={userAddress}
+                        onChange={fetchUserInfo}
+                        className="mt-1 w-full py-2 px-2 border border-black rounded-[4px]"
+                      />
+                      <button
+                        onClick={() => fetchUserInfo()}
+                        className="w-full h-10 flex items-center justify-center bg-blue-500 rounded text-white mt-4"
+                      >
+                        Get User Info
+                      </button>
+                    </div>
+
+                    {/* Display User Info */}
+                    {userInfo && (
+                      <div className="mt-6 space-y-4">
+                        <div>
+                          <span className="font-bold">Name:</span> {userInfo[0]}
+                        </div>
+                        <div>
+                          <span className="font-bold">Age:</span> {userInfo[1]}
+                        </div>
+                        <div>
+                          <span className="font-bold">Balance:</span> {ethers.formatEther(userInfo[2])} ETH
+                        </div>
+                        <div>
+                          <span className="font-bold">Has Registered:</span>{" "}
+                          {userInfo[3] ? "Yes" : "No"}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
