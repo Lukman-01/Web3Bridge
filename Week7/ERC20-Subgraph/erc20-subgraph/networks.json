@@ -1,0 +1,8 @@
+{
+  "scroll-sepolia": {
+    "OGToken": {
+      "address": "0x81a81504cf6961164C6Ea740E6Da77f3d14CEd40",
+      "startBlock": 6877517
+    }
+  }
+}

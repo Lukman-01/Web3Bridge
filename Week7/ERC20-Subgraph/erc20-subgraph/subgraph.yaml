@@ -1,0 +1,35 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: OGToken
+    network: scroll-sepolia
+    source:
+      address: "0x81a81504cf6961164C6Ea740E6Da77f3d14CEd40"
+      abi: OGToken
+      startBlock: 6877517
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - TokensBurned
+        - TokensMinted
+        - Transfer
+      abis:
+        - name: OGToken
+          file: ./abis/OGToken.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: TokensBurned(indexed address,uint256)
+          handler: handleTokensBurned
+        - event: TokensMinted(indexed address,uint256)
+          handler: handleTokensMinted
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/og-token.ts
