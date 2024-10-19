@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
 * EIP-2535 Diamonds: https://eips.ethereum.org/EIPS/eip-2535
 /******************************************************************************/
 import {IDiamondCut} from "../interfaces/IDiamondCut.sol";
+import {IERC20} from "../interfaces/IERC20.sol";
 
 library LibDiamond {
     error InValidFacetCutAction();
@@ -47,6 +48,12 @@ library LibDiamond {
         mapping(bytes4 => bool) supportedInterfaces;
         // owner of the contract
         address contractOwner;
+
+        IERC20 token;
+        address owner;
+        uint256 claimAmount;
+        mapping(address => bool) whitelist;
+        mapping(address => bool) hasClaimed;
     }
 
     function diamondStorage()
