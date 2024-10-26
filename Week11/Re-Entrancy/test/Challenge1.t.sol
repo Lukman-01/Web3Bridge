@@ -68,18 +68,4 @@ contract Challenge1Test is Test {
        }
         
     }
-
-
-
-
-    uint count;
-    receive() external payable {
-       
-             chal.lock_me();
-            console2.log("locked");
-
-    }
-
-
-
 }
